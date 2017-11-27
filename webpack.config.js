@@ -1,11 +1,14 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path')
 
 module.exports = {
-  entry: './src/app.js',
+  entry: {
+    "app.bundle": './src/app.js'
+  },
   output: {
-    path: __dirname + '/dist',
-    filename: 'app.bundle.js'
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[chunkhash].js'
   },
   devServer: {
     port: 9000,
@@ -30,7 +33,9 @@ module.exports = {
           //resolve-url-loader may be chained before sass-loader if necessary
           use: ['css-loader', 'sass-loader']
         })
-      }
+      },
+      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ }
     ]
   }
 };
