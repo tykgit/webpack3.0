@@ -7,6 +7,10 @@ module.exports = {
     path: __dirname + '/dist',
     filename: 'app.bundle.js'
   },
+  devServer: {
+    port: 9000,
+    open: true
+  },
   plugins: [new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
