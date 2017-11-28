@@ -1,6 +1,11 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+let pathsToClean = [
+  'dist',
+]
 
 module.exports = {
   entry: {
@@ -14,7 +19,9 @@ module.exports = {
     port: 9000,
     open: true
   },
-  plugins: [new HtmlWebpackPlugin({
+  plugins: [
+    new CleanWebpackPlugin(pathsToClean),
+    new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
       minify: {
