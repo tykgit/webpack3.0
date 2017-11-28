@@ -9,7 +9,8 @@ let pathsToClean = [
 
 module.exports = {
   entry: {
-    "app.bundle": './src/app.js'
+    "app.bundle": './src/app.js',
+    "contact": './src/contact.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -28,6 +29,16 @@ module.exports = {
         collapseWhitespace: true,
       },
       hash: true,
+      excludeChunks: ['contact']
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/contact.html',
+      filename: 'contact.html',
+      minify: {
+        collapseWhitespace: true,
+      },
+      hash: true,
+      chunks: ['contact']
     }),
     new ExtractTextPlugin('style.css')
   ],
