@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 let pathsToClean = [
   'dist',
@@ -14,16 +15,17 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[chunkhash].js'
+    filename: '[name].js'
   },
   devServer: {
     port: 9000,
-    open: true
+    open: true,
+    hot: true
   },
   plugins: [
     new CleanWebpackPlugin(pathsToClean),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './src/index.pug',
       filename: 'index.html',
       minify: {
         collapseWhitespace: true,
@@ -40,20 +42,22 @@ module.exports = {
       hash: true,
       chunks: ['contact']
     }),
-    new ExtractTextPlugin('style.css')
+    new ExtractTextPlugin({
+      filename: 'style.css',
+      disable: false
+    }),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin()
   ],
   module: {
     rules: [
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          //resolve-url-loader may be chained before sass-loader if necessary
-          use: ['css-loader', 'sass-loader']
-        })
+        use: ['style-loader', 'css-loader', 'sass-loader']
       },
       { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
-      { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ }
+      { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.pug$/, loader: ['raw-loader', 'pug-html-loader'] }
     ]
   }
 };
