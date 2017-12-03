@@ -4,6 +4,16 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
+var isProd = process.env.NODE_ENV === 'production'; // true or false
+var cssDev = ['style-loader', 'css-loader', 'sass-loader'];
+var cssProd = ExtractTextPlugin.extract({
+  fallback: 'style-loader',
+  //resolve-url-loader may be chained before sass-loader if necessary
+  use: ['css-loader', 'sass-loader']
+})
+
+var cssConfig = isProd ? cssProd : cssDev;
+
 let pathsToClean = [
   'dist',
 ]
@@ -15,7 +25,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js'
+    filename: '[name].[hash].js'
   },
   devServer: {
     port: 9000,
@@ -44,7 +54,7 @@ module.exports = {
     }),
     new ExtractTextPlugin({
       filename: 'style.css',
-      disable: false
+      disable: !isProd
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin()
@@ -53,7 +63,7 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: cssConfig
       },
       { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
       { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ },
