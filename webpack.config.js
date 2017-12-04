@@ -35,7 +35,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(pathsToClean),
     new HtmlWebpackPlugin({
-      template: './src/index.pug',
+      template: './src/index.html',
       filename: 'index.html',
       minify: {
         collapseWhitespace: true,
@@ -67,7 +67,25 @@ module.exports = {
       },
       { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
       { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ },
-      { test: /\.pug$/, loader: ['raw-loader', 'pug-html-loader'] }
+      { test: /\.pug$/, loader: ['raw-loader', 'pug-html-loader'] },
+      {
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'images/'
+            }
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              bypassOnDebug: true,
+            }
+          }
+        ]
+      }
     ]
   }
 };
