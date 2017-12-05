@@ -5,6 +5,9 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const bootstrapEntryPoints = require('./webpack.bootstrap.config')
 
+const glob = require('glob');
+const PurifyCSSPlugin = require('purifycss-webpack');
+
 var isProd = process.env.NODE_ENV === 'production'; // true or false
 var cssDev = ['style-loader', 'css-loader', 'sass-loader'];
 var cssProd = ExtractTextPlugin.extract({
@@ -32,6 +35,7 @@ module.exports = {
     filename: '[name].[hash].js'
   },
   devServer: {
+    inline: true,
     port: 9000,
     open: true,
     hot: true
@@ -60,8 +64,13 @@ module.exports = {
       filename: '/css/[name].css',
       disable: !isProd
     }),
+    new PurifyCSSPlugin({
+      // Give paths to parse for rules. These should be absolute!
+      paths: glob.sync(path.join(__dirname, 'src/*.html')),
+      minimize: true
+    }),
     new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
     rules: [
