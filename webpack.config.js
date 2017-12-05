@@ -61,8 +61,9 @@ module.exports = {
       chunks: ['contact']
     }),
     new ExtractTextPlugin({
-      filename: '/css/[name].css',
-      disable: !isProd
+      filename: '[name].css',
+      disable: !isProd,
+      publicPath: 'css/'
     }),
     new PurifyCSSPlugin({
       // Give paths to parse for rules. These should be absolute!
@@ -108,8 +109,8 @@ module.exports = {
           }
         }],
       },
-      { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000&name=fonts/[name].[ext]' },
-      { test: /\.(ttf|eot)$/, loader: 'file-loader?name=fonts/[name].[ext]' },
+      { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000&name=[name].[ext]&publicPath=fonts/' },
+      { test: /\.(ttf|eot)$/, loader: 'file-loader?name=[name].[ext]&outputPath=fonts/' },
       { test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/, loader: 'imports-loader?jQuery=jquery' },
     ]
   }
