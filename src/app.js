@@ -4,7 +4,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from './Root';
 
-sss
 import $ from 'jquery';
 import './jquery.changeStyle';
 
