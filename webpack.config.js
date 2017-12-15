@@ -9,7 +9,7 @@ const glob = require('glob');
 const PurifyCSSPlugin = require('purifycss-webpack');
 
 var isProd = process.env.NODE_ENV === 'production'; // true or false
-var cssDev = ['style-loader', 'css-loader', 'sass-loader'];
+var cssDev = ['style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap'];
 var cssProd = ExtractTextPlugin.extract({
   fallback: 'style-loader',
   //resolve-url-loader may be chained before sass-loader if necessary
@@ -41,6 +41,10 @@ module.exports = {
     hot: true
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
     new CleanWebpackPlugin(pathsToClean),
     new HtmlWebpackPlugin({
       template: './src/index.html',
@@ -65,11 +69,11 @@ module.exports = {
       disable: !isProd,
       publicPath: 'css/'
     }),
-    new PurifyCSSPlugin({
-      // Give paths to parse for rules. These should be absolute!
-      paths: glob.sync(path.join(__dirname, 'src/*.html')),
-      minimize: true
-    }),
+    // new PurifyCSSPlugin({
+    //   // Give paths to parse for rules. These should be absolute!
+    //   paths: glob.sync(path.join(__dirname, 'src#<{(|.html')),
+    //   minimize: true
+    // }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ],
@@ -109,9 +113,10 @@ module.exports = {
           }
         }],
       },
-      { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000&name=[name].[ext]&publicPath=fonts/' },
+      { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000&name=[name].[ext]&outputPath=fonts/' },
       { test: /\.(ttf|eot)$/, loader: 'file-loader?name=[name].[ext]&outputPath=fonts/' },
       { test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/, loader: 'imports-loader?jQuery=jquery' },
     ]
-  }
+  },
+  devtool: 'source-map'
 };
